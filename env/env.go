@@ -13,7 +13,7 @@ func GetGCloudProject() string {
 
 func GetDatastoreKey() string {
 
-	return failIfEmpty("DATASTORE_KEY")
+	return os.Getenv("DATASTORE_KEY")
 }
 
 func GetSlackInfoUrl() string {
