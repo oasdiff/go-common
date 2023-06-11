@@ -6,20 +6,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func GetGCloudProject() string {
+func GetBucket() string { return failIfEmpty("GCS_BUCKET") }
 
-	return failIfEmpty("GCLOUD_PROJECT")
-}
+func GetGCloudProject() string { return failIfEmpty("GCLOUD_PROJECT") }
 
-func GetDatastoreKey() string {
+func GetDatastoreKey() string { return os.Getenv("DATASTORE_KEY") }
 
-	return os.Getenv("DATASTORE_KEY")
-}
+func GetStorageKey() string { return os.Getenv("STORAGE_KEY") }
 
-func GetSlackInfoUrl() string {
-
-	return failIfEmpty("SLACK_INFO_URL")
-}
+func GetSlackInfoUrl() string { return failIfEmpty("SLACK_INFO_URL") }
 
 func failIfEmpty(key string) string {
 

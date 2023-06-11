@@ -2,9 +2,18 @@ package ds
 
 import "reflect"
 
-type InMemoryClient struct{}
+type InMemoryClient struct {
+	payload map[Kind]interface{}
+}
 
-func NewInMemoryClient() Client { return &InMemoryClient{} }
+func NewInMemoryClient(data map[Kind]interface{}) Client {
+
+	if data == nil {
+		data = make(map[Kind]interface{})
+	}
+
+	return &InMemoryClient{payload: data}
+}
 
 func (c *InMemoryClient) Get(kind Kind, id string, dst interface{}) error {
 
@@ -18,6 +27,13 @@ func (c *InMemoryClient) Get(kind Kind, id string, dst interface{}) error {
 	return nil
 }
 
-func (c *InMemoryClient) GetAll(kind Kind, dst interface{}) error { return nil }
+func (c *InMemoryClient) GetAll(kind Kind, dst interface{}) error {
+
+	if res, ok := c.payload[kind]; ok {
+		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(res))
+	}
+
+	return nil
+}
 
 func (c *InMemoryClient) Put(kind Kind, id string, src interface{}) error { return nil }
