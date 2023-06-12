@@ -24,10 +24,11 @@ type Client interface {
 	Get(kind Kind, id string, dst interface{}) error
 	GetAll(kind Kind, dst interface{}) error
 	Put(kind Kind, id string, src interface{}) error
+	Close() error
 }
 
 type ClientWrapper struct {
-	ds *datastore.Client
+	dsc *datastore.Client
 }
 
 func NewClientWrapper(project string) Client {
@@ -51,7 +52,7 @@ func NewClientWrapper(project string) Client {
 			logrus.Fatalf("failed to create datastore client with '%v'", err)
 		}
 
-		return &ClientWrapper{ds: client}
+		return &ClientWrapper{dsc: client}
 	}
 
 	client, err := datastore.NewClient(context.Background(), project)
@@ -59,12 +60,12 @@ func NewClientWrapper(project string) Client {
 		logrus.Fatalf("failed to create datastore client without token with '%v'", err)
 	}
 
-	return &ClientWrapper{ds: client}
+	return &ClientWrapper{dsc: client}
 }
 
 func (c *ClientWrapper) Get(kind Kind, id string, dst interface{}) error {
 
-	err := c.ds.Get(context.Background(), getKey(kind, id), dst)
+	err := c.dsc.Get(context.Background(), getKey(kind, id), dst)
 	if err != nil {
 		logrus.Errorf("failed to get '%s' id '%s' from datastore namespace '%s' with '%v'", kind, id, namespace, err)
 	}
@@ -75,7 +76,7 @@ func (c *ClientWrapper) Get(kind Kind, id string, dst interface{}) error {
 func (c *ClientWrapper) GetAll(kind Kind, dst interface{}) error {
 
 	q := datastore.NewQuery(string(kind)).Namespace(namespace)
-	_, err := c.ds.GetAll(context.Background(), q, dst)
+	_, err := c.dsc.GetAll(context.Background(), q, dst)
 	if err != nil {
 		logrus.Errorf("failed to get all '%s' from datastore namespace '%s' with '%v'", kind, namespace, err)
 	}
@@ -85,7 +86,7 @@ func (c *ClientWrapper) GetAll(kind Kind, dst interface{}) error {
 
 func (c *ClientWrapper) Put(kind Kind, id string, src interface{}) error {
 
-	_, err := c.ds.Put(context.Background(), getKey(kind, id), src)
+	_, err := c.dsc.Put(context.Background(), getKey(kind, id), src)
 	if err != nil {
 		logrus.Errorf("failed to update '%s/%s' item '%+v' type: '%T' with '%v'", namespace, kind, src, src, err)
 	} else {
@@ -94,6 +95,8 @@ func (c *ClientWrapper) Put(kind Kind, id string, src interface{}) error {
 
 	return err
 }
+
+func (c *ClientWrapper) Close() error { return c.dsc.Close() }
 
 func getKey(kind Kind, id string) *datastore.Key {
 
