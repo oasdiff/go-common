@@ -5,8 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"strconv"
-	"strings"
 	"time"
 
 	"cloud.google.com/go/storage"
@@ -80,12 +78,15 @@ func (store *Store) UploadSpec(tenantId string, name string, file []byte) error 
 
 func (store *Store) ReadLatestSpec(tenantId string) ([]byte, error) {
 
-	name, err := store.getLatestSpec(tenantId)
+	path, err := store.getLatestSpec(tenantId)
 	if err != nil {
 		return nil, err
 	}
+	if path == "" {
+		logrus.Infof("no specs for tenant '%s'", tenantId)
+		return []byte{}, nil
+	}
 
-	path := fmt.Sprintf("%s/spec/%s", tenantId, name)
 	rc, err := store.client.Bucket(store.bucket).
 		Object(path).
 		NewReader(context.Background())
@@ -113,13 +114,13 @@ func (store *Store) ReadLatestSpec(tenantId string) ([]byte, error) {
 
 func (store *Store) Close() error {
 
-	return store.Close()
+	return store.client.Close()
 }
 
 func (store *Store) getLatestSpec(tenantId string) (string, error) {
 
-	var res int64
-	res = -1
+	res := ""
+	latestCreated := time.Date(1980, time.Month(1), 1, 0, 0, 0, 0, time.UTC)
 	folder := fmt.Sprintf("%s/spec", tenantId)
 	it := store.client.Bucket(store.bucket).
 		Objects(context.Background(), &storage.Query{Prefix: folder})
@@ -133,23 +134,12 @@ func (store *Store) getLatestSpec(tenantId string) (string, error) {
 			return "", err
 		}
 
-		// attrs.Name looks like this: "{tenant-id}/spec/1685962955"
-		i := strings.LastIndex(attrs.Name, "/")
-		if i < 0 {
-			err = fmt.Errorf("invalid spec '%s'", attrs.Name)
-			logrus.Error(err.Error())
-			return "", err
-		}
-		name, err := strconv.ParseInt(attrs.Name[i+1:], 10, 64)
-		if err != nil {
-			logrus.Errorf("failed to parse spec name '%s' under '%s' with '%v'",
-				attrs.Name[i-1:], folder, err)
-			return "", err
-		}
-		if res < name {
-			res = name
+		if latestCreated.Before(attrs.Created) {
+			latestCreated = attrs.Created
+			// attrs.Name looks like this: "{tenant-id}/spec/1685962955"
+			res = attrs.Name
 		}
 	}
 
-	return strconv.FormatInt(res, 10), nil
+	return res, nil
 }
