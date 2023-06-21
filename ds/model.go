@@ -10,8 +10,9 @@ type Tenant struct {
 }
 
 type Webhook struct {
-	TenantId string `json:"tenant_id" datastore:"tenant_id"`
-	Spec     string `json:"spec" datastore:"spec"`
-	Copy     string `json:"copy" datastore:"copy"`
-	Created  int64  `json:"created" datastore:"created"`
+	Name     string `datastore:"name"`
+	TenantId string `datastore:"tenant_id"`
+	Spec     string `datastore:"spec"`
+	Copy     string `datastore:"copy"`
+	Created  int64  `datastore:"created"`
 }
