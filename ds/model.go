@@ -10,6 +10,7 @@ type Tenant struct {
 }
 
 type Webhook struct {
+	Id       string `datastore:"id"`
 	Name     string `datastore:"name"`
 	TenantId string `datastore:"tenant_id"`
 	Spec     string `datastore:"spec"`
