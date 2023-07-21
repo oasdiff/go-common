@@ -36,6 +36,10 @@ func (c *InMemoryClient) GetAll(kind Kind, dst interface{}) error {
 	return nil
 }
 
+func (c *InMemoryClient) GetFilter(kind Kind, filters []FilterField, dst interface{}) error {
+	return nil
+}
+
 func (c *InMemoryClient) Put(kind Kind, id string, src interface{}) error { return nil }
 
 func (c *InMemoryClient) Close() error { return nil }
