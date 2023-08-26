@@ -27,7 +27,7 @@ type Store struct {
 
 func NewStore() Client {
 
-	if key := env.GetStorageKey(); key != "" {
+	if key := env.GetGCPStorageKey(); key != "" {
 		conf, err := google.JWTConfigFromJSON([]byte(key), storage.ScopeFullControl)
 		if err != nil {
 			logrus.Fatalf("failed to config storage JWT from JSON key with '%v'", err)
@@ -40,7 +40,7 @@ func NewStore() Client {
 			logrus.Fatalf("failed to create datastore client with '%v'", err)
 		}
 
-		return &Store{client: client, bucket: env.GetBucket()}
+		return &Store{client: client, bucket: env.GetGCPStorageBucket()}
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*7)
@@ -50,7 +50,7 @@ func NewStore() Client {
 		logrus.Fatalf("failed to create storage client with '%v'", err)
 	}
 
-	return &Store{client: client, bucket: env.GetBucket()}
+	return &Store{client: client, bucket: env.GetGCPStorageBucket()}
 }
 
 // Buckets/syncc/{tenant-id}/spec/[]spec

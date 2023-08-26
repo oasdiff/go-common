@@ -40,7 +40,7 @@ type ClientWrapper struct {
 
 func NewClientWrapper(project string, namespace string) Client {
 
-	if key := env.GetDatastoreKey(); key != "" {
+	if key := env.GetGCPDatastoreKey(); key != "" {
 		conf, err := google.JWTConfigFromJSON([]byte(key), datastore.ScopeDatastore)
 		if err != nil {
 			logrus.Fatalf("failed to config datastore JWT from JSON key with '%v'", err)

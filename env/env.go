@@ -6,13 +6,19 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func GetBucket() string { return failIfEmpty("GCS_BUCKET") }
+func GetGCPProject() string { return failIfEmpty("GCP_PROJECT") }
 
-func GetGCloudProject() string { return failIfEmpty("GCLOUD_PROJECT") }
+func GetGCPLocation() string { return failIfEmpty("GCP_LOCATION") }
 
-func GetDatastoreKey() string { return os.Getenv("DATASTORE_KEY") }
+func GetGCPQueue() string { return failIfEmpty("GCP_QUEUE") }
 
-func GetStorageKey() string { return os.Getenv("STORAGE_KEY") }
+func GetGCPDatastoreKey() string { return os.Getenv("GCP_DATASTORE_KEY") }
+
+func GetGCPStorageBucket() string { return failIfEmpty("GCP_STORAGE_BUCKET") }
+
+func GetGCPStorageKey() string { return os.Getenv("GCP_STORAGE_KEY") }
+
+func GetTaskSubscriberUrl() string { return os.Getenv("OASDIFF_TASK_SUBSCRIBER_URL") }
 
 func GetSlackInfoUrl() string { return failIfEmpty("SLACK_INFO_URL") }
 
