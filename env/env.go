@@ -22,6 +22,10 @@ func GetTaskSubscriberUrl() string { return os.Getenv("OASDIFF_TASK_SUBSCRIBER_U
 
 func GetSlackInfoUrl() string { return failIfEmpty("SLACK_INFO_URL") }
 
+func GetGoogleAnalyticsMeasurementId() string { return failIfEmpty("GOOGLE_ANALYTICS_MEASUREMENT_ID") }
+
+func GetGoogleAnalyticsApiSecret() string { return failIfEmpty("GOOGLE_ANALYTICS_API_SECRET") }
+
 func failIfEmpty(key string) string {
 
 	res := os.Getenv(key)
