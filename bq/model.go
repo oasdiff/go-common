@@ -2,19 +2,20 @@ package bq
 
 import (
 	"cloud.google.com/go/bigquery"
+	"cloud.google.com/go/civil"
 )
 
 type Telemetry struct {
-	Id                 string   `bigquery:"id"`
-	Time               int64    `bigquery:"time"`
-	MachineId          string   `bigquery:"machine_id"`
-	Runtime            string   `bigquery:"runtime"`
-	Platform           string   `bigquery:"platform"`
-	Command            string   `bigquery:"command"`
-	Args               []string `bigquery:"args"`
-	Flags              string   `bigquery:"flags"`
-	Application        string   `bigquery:"application"`
-	ApplicationVersion string   `bigquery:"application_version"`
+	Id                 string         `bigquery:"id"`
+	Time               civil.DateTime `bigquery:"time"`
+	MachineId          string         `bigquery:"machine_id"`
+	Runtime            string         `bigquery:"runtime"`
+	Platform           string         `bigquery:"platform"`
+	Command            string         `bigquery:"command"`
+	Args               []string       `bigquery:"args"`
+	Flags              string         `bigquery:"flags"`
+	Application        string         `bigquery:"application"`
+	ApplicationVersion string         `bigquery:"application_version"`
 }
 
 // Save implements the ValueSaver interface

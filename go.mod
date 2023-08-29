@@ -3,6 +3,7 @@ module github.com/oasdiff/go-common
 go 1.20
 
 require (
+	cloud.google.com/go v0.110.0
 	cloud.google.com/go/bigquery v1.50.0
 	cloud.google.com/go/datastore v1.11.0
 	cloud.google.com/go/storage v1.30.1
@@ -13,7 +14,6 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.110.0 // indirect
 	cloud.google.com/go/compute v1.19.3 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/iam v0.13.0 // indirect

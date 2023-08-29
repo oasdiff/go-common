@@ -6,6 +6,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+func GetLogLevel() string { return failIfEmpty("LOG_LEVEL") }
+
 func GetGCPProject() string { return failIfEmpty("GCP_PROJECT") }
 
 func GetGCPLocation() string { return failIfEmpty("GCP_LOCATION") }
@@ -13,6 +15,8 @@ func GetGCPLocation() string { return failIfEmpty("GCP_LOCATION") }
 func GetGCPQueue() string { return failIfEmpty("GCP_QUEUE") }
 
 func GetGCPDatastoreKey() string { return os.Getenv("GCP_DATASTORE_KEY") }
+
+func GetBigQueryDataset() string { return os.Getenv("GCP_BIG_QUERY_DATASET") }
 
 func GetGCPStorageBucket() string { return failIfEmpty("GCP_STORAGE_BUCKET") }
 
