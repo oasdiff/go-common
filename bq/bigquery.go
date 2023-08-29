@@ -17,10 +17,10 @@ const (
 type Client interface {
 	CreateDataset(dataset string) error
 	DeleteDataset(dataset string) error
-	CreateTable(dataset string, tableID string, metadata *bigquery.TableMetadata) error
-	DeleteTable(dataset string, tableID string) error
+	CreateTable(dataset string, table string, metadata *bigquery.TableMetadata) error
+	DeleteTable(dataset string, table string) error
 	DatasetIterator(callback func(dataset *bigquery.Dataset)) error
-	Insert(dataset string, tableID string, src interface{}) error
+	Insert(dataset string, table string, src interface{}) error
 	Query(q string) error
 	QueryIterator(q string, params []bigquery.QueryParameter) (Iterator, error)
 	GetQueryStats(q string, params []bigquery.QueryParameter) (*bigquery.JobStatistics, error)
@@ -41,7 +41,7 @@ func NewClient(gcpProjectID string) Client {
 	return &ClientImpl{bqClient: client}
 }
 
-func (client *ClientImpl) Insert(datasetID string, tableID string, src interface{}) error {
+func (client *ClientImpl) Insert(dataset string, table string, src interface{}) error {
 
 	arr := util.ToInterfaceSlice(src)
 	count := len(arr)
@@ -50,12 +50,12 @@ func (client *ClientImpl) Insert(datasetID string, tableID string, src interface
 		if end > count {
 			end = count
 		}
-		err := client.bqClient.Dataset(datasetID).Table(tableID).Inserter().Put(context.Background(), arr[start:end])
+		err := client.bqClient.Dataset(dataset).Table(table).Inserter().Put(context.Background(), arr[start:end])
 		if err != nil {
-			log.Errorf("failed to persist '%s.%s' with '%v'", datasetID, tableID, err)
+			log.Errorf("failed to persist '%s.%s' with '%v'", dataset, table, err)
 			return err
 		}
-		log.Debugf("inserted '%d:%d' into '%s.%s'", start, end, datasetID, tableID)
+		log.Debugf("inserted '%d:%d' into '%s.%s'", start, end, dataset, table)
 		if end == count {
 			break
 		}
