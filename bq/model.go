@@ -27,10 +27,15 @@ type Telemetry struct {
 
 func NewTelemetry(t *model.Telemetry) *Telemetry {
 
+	// *** temporary fix https://github.com/googleapis/google-cloud-go/issues/6409
+	now := civil.DateTimeOf(time.Now())
+	now.Time.Nanosecond = 0
+	// ***
+
 	return &Telemetry{
 		Application:        t.Application,
 		ApplicationVersion: t.ApplicationVersion,
-		Time:               civil.DateTimeOf(time.Now()),
+		Time:               now,
 		MachineId:          t.MachineId,
 		Runtime:            t.Runtime,
 		Platform:           t.Platform,
