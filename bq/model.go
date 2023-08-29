@@ -40,9 +40,18 @@ func NewTelemetry(t *model.Telemetry) *Telemetry {
 		Runtime:            t.Runtime,
 		Platform:           t.Platform,
 		Command:            t.Command,
-		Args:               t.Args,
+		Args:               getArgs(t.Args),
 		Flags:              toKeyValue(t.Flags),
 	}
+}
+
+func getArgs(args []string) []string {
+
+	if len(args) == 0 {
+		return []string{}
+	}
+
+	return args
 }
 
 // Save implements the ValueSaver interface
