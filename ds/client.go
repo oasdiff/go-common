@@ -38,33 +38,34 @@ type ClientWrapper struct {
 	namespace string
 }
 
-func NewClientWrapper(project string, namespace string) Client {
-
-	if key := env.GetGCPDatastoreKey(); key != "" {
-		conf, err := google.JWTConfigFromJSON([]byte(key), datastore.ScopeDatastore)
-		if err != nil {
-			logrus.Fatalf("failed to config datastore JWT from JSON key with '%v'", err)
-		}
-
-		ctx := context.Background()
-		opt := []option.ClientOption{option.WithTokenSource(conf.TokenSource(ctx))}
-
-		dataStoreEndPoint := os.Getenv("DATASTORE_ENDPOINT")
-		if dataStoreEndPoint != "" {
-			opt = append(opt, option.WithEndpoint(dataStoreEndPoint))
-		}
-
-		client, err := datastore.NewClient(ctx, project, opt...)
-		if err != nil {
-			logrus.Fatalf("failed to create datastore client with '%v'", err)
-		}
-
-		return &ClientWrapper{dsc: client, namespace: namespace}
-	}
+func NewClient(project string, namespace string) Client {
 
 	client, err := datastore.NewClient(context.Background(), project)
 	if err != nil {
 		logrus.Fatalf("failed to create datastore client without token with '%v'", err)
+	}
+
+	return &ClientWrapper{dsc: client, namespace: namespace}
+}
+
+func NewClientAuth(project string, namespace string) Client {
+
+	conf, err := google.JWTConfigFromJSON([]byte(env.GetDatastoreToken()), datastore.ScopeDatastore)
+	if err != nil {
+		logrus.Fatalf("failed to config datastore JWT from JSON key with '%v'", err)
+	}
+
+	ctx := context.Background()
+	opt := []option.ClientOption{option.WithTokenSource(conf.TokenSource(ctx))}
+
+	dataStoreEndPoint := os.Getenv("DATASTORE_ENDPOINT")
+	if dataStoreEndPoint != "" {
+		opt = append(opt, option.WithEndpoint(dataStoreEndPoint))
+	}
+
+	client, err := datastore.NewClient(ctx, project, opt...)
+	if err != nil {
+		logrus.Fatalf("failed to create datastore client with '%v'", err)
 	}
 
 	return &ClientWrapper{dsc: client, namespace: namespace}

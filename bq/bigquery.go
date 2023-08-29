@@ -46,7 +46,7 @@ func NewClient(project string) Client {
 
 func NewClientAuth(project string) Client {
 
-	conf, err := google.JWTConfigFromJSON([]byte(env.GetBigQueryKey()), bigquery.Scope)
+	conf, err := google.JWTConfigFromJSON([]byte(env.GetBigQueryToken()), bigquery.Scope)
 	if err != nil {
 		log.Fatalf("failed to config big-query JWT with '%v'", err)
 	}
