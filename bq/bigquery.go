@@ -4,9 +4,12 @@ import (
 	"context"
 
 	"cloud.google.com/go/bigquery"
+	"github.com/oasdiff/go-common/env"
 	"github.com/oasdiff/go-common/util"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/oauth2/google"
 	"google.golang.org/api/iterator"
+	"google.golang.org/api/option"
 )
 
 const (
@@ -31,11 +34,27 @@ type ClientImpl struct {
 	bqClient *bigquery.Client
 }
 
-func NewClient(gcpProjectID string) Client {
+func NewClient(project string) Client {
 
-	client, err := bigquery.NewClient(context.Background(), gcpProjectID)
+	client, err := bigquery.NewClient(context.Background(), project)
 	if err != nil {
 		log.Fatalf("failed to create bigquery client without token with '%v'", err)
+	}
+
+	return &ClientImpl{bqClient: client}
+}
+
+func NewClientAuth(project string) Client {
+
+	conf, err := google.JWTConfigFromJSON([]byte(env.GetBigQueryKey()), bigquery.Scope)
+	if err != nil {
+		log.Fatalf("failed to config big-query JWT with '%v'", err)
+	}
+
+	ctx := context.Background()
+	client, err := bigquery.NewClient(ctx, project, option.WithTokenSource(conf.TokenSource(ctx)))
+	if err != nil {
+		log.Fatalf("failed to create bigquery client with '%v'", err)
 	}
 
 	return &ClientImpl{bqClient: client}

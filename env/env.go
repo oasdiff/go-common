@@ -14,9 +14,11 @@ func GetGCPLocation() string { return failIfEmpty("GCP_LOCATION") }
 
 func GetGCPQueue() string { return failIfEmpty("GCP_QUEUE") }
 
-func GetGCPDatastoreKey() string { return os.Getenv("GCP_DATASTORE_KEY") }
+func GetGCPDatastoreKey() string { return os.Getenv("GCP_DATASTORE_TOKEN") }
 
 func GetBigQueryDataset() string { return os.Getenv("GCP_BIG_QUERY_DATASET") }
+
+func GetBigQueryKey() string { return os.Getenv("GCP_BIG_QUERY_TOKEN") }
 
 func GetGCPStorageBucket() string { return failIfEmpty("GCP_STORAGE_BUCKET") }
 
