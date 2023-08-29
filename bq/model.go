@@ -1,8 +1,11 @@
 package bq
 
 import (
+	"time"
+
 	"cloud.google.com/go/bigquery"
 	"cloud.google.com/go/civil"
+	"github.com/oasdiff/telemetry/model"
 )
 
 type KeyValue struct {
@@ -20,6 +23,21 @@ type Telemetry struct {
 	Command            string         `bigquery:"command"`
 	Args               []string       `bigquery:"args"`
 	Flags              []KeyValue     `bigquery:"flags"`
+}
+
+func NewTelemetry(t *model.Telemetry) *Telemetry {
+
+	return &Telemetry{
+		Application:        t.Application,
+		ApplicationVersion: t.ApplicationVersion,
+		Time:               civil.DateTimeOf(time.Now()),
+		MachineId:          t.MachineId,
+		Runtime:            t.Runtime,
+		Platform:           t.Platform,
+		Command:            t.Command,
+		Args:               t.Args,
+		Flags:              toKeyValue(t.Flags),
+	}
 }
 
 // Save implements the ValueSaver interface
@@ -59,4 +77,14 @@ func GetTelemetryTableMetadata() *bigquery.TableMetadata {
 		Type:  bigquery.DayPartitioningType,
 		Field: fieldTime,
 	}}
+}
+
+func toKeyValue(items map[string]string) []KeyValue {
+
+	res := make([]KeyValue, len(items))
+	for key, value := range items {
+		res = append(res, KeyValue{Key: key, Value: value})
+	}
+
+	return res
 }
