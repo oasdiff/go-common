@@ -50,7 +50,7 @@ func NewClient(project string, namespace string) Client {
 
 func NewClientAuth(project string, namespace string) Client {
 
-	conf, err := google.JWTConfigFromJSON([]byte(env.GetDatastoreToken()), datastore.ScopeDatastore)
+	conf, err := google.JWTConfigFromJSON([]byte(env.GetGCPDatastoreToken()), datastore.ScopeDatastore)
 	if err != nil {
 		logrus.Fatalf("failed to config datastore JWT from JSON key with '%v'", err)
 	}

@@ -14,7 +14,9 @@ func GetGCPLocation() string { return failIfEmpty("GCP_LOCATION") }
 
 func GetGCPQueue() string { return failIfEmpty("GCP_QUEUE") }
 
-func GetDatastoreToken() string { return failIfEmpty("GCP_DATASTORE_TOKEN") }
+func GetGCPDatastoreToken() string { return failIfEmpty("GCP_DATASTORE_TOKEN") }
+
+func GetGCPDatastoreNamespace() string { return failIfEmpty("GCP_DATASTORE_NAMESPACE") }
 
 func GetBigQueryDataset() string { return failIfEmpty("GCP_BIG_QUERY_DATASET") }
 
