@@ -7,6 +7,7 @@ toolchain go1.21.0
 require (
 	cloud.google.com/go v0.110.0
 	cloud.google.com/go/bigquery v1.50.0
+	cloud.google.com/go/cloudtasks v1.10.0
 	cloud.google.com/go/datastore v1.11.0
 	cloud.google.com/go/storage v1.30.1
 	github.com/oasdiff/telemetry v0.0.5
