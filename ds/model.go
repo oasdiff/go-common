@@ -7,6 +7,7 @@ type Tenant struct {
 	Callback     string `datastore:"callback"`
 	SlackChannel string `datastore:"slack_channel"`
 	Created      int64  `datastore:"created"`
+	Comment      int64  `datastore:"comment"`
 }
 
 type Webhook struct {
