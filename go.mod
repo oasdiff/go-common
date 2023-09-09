@@ -2,20 +2,18 @@ module github.com/oasdiff/go-common
 
 go 1.21
 
-toolchain go1.21.0
-
 require (
 	cloud.google.com/go v0.110.7
 	cloud.google.com/go/bigquery v1.54.0
 	cloud.google.com/go/cloudtasks v1.12.1
 	cloud.google.com/go/datastore v1.14.0
-	cloud.google.com/go/storage v1.32.0
+	cloud.google.com/go/storage v1.33.0
 	github.com/gorilla/mux v1.8.0
 	github.com/oasdiff/telemetry v0.0.5
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/oauth2 v0.12.0
-	google.golang.org/api v0.138.0
+	google.golang.org/api v0.139.0
 )
 
 require (
