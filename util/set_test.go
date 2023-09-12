@@ -10,19 +10,19 @@ import (
 func TestStringSet_Add(t *testing.T) {
 
 	const item = "hello world"
-	set := util.StringSet{}
+	set := util.NewStringSet()
 	require.True(t, set.Add(item).Has(item))
 }
 
 func TestStringSet_Size(t *testing.T) {
 
-	set := util.StringSet{}
+	set := util.NewStringSet()
 	require.Equal(t, set.Add("1").Add("2").Size(), 2)
 }
 
 func TestStringSet_Clear(t *testing.T) {
 
-	set := util.StringSet{}
+	set := util.NewStringSet()
 	require.Equal(t, 2, set.Add("aaa").Add("bbbb").Size())
 	set.Clear()
 	require.Equal(t, 0, set.Size())
@@ -31,19 +31,19 @@ func TestStringSet_Clear(t *testing.T) {
 func TestIntSet_Add(t *testing.T) {
 
 	const item = 7
-	set := util.IntSet{}
+	set := util.NewIntSet()
 	require.True(t, set.Add(item).Has(item))
 }
 
 func TestIntSet_Size(t *testing.T) {
 
-	set := util.IntSet{}
+	set := util.NewIntSet()
 	require.Equal(t, 2, set.Add(7).Add(55).Size())
 }
 
 func TestIntSet_Clear(t *testing.T) {
 
-	set := util.IntSet{}
+	set := util.NewIntSet()
 	require.Equal(t, set.Add(47).Add(1778).Size(), 2)
 	set.Clear()
 	require.Equal(t, 0, set.Size())

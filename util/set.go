@@ -8,6 +8,11 @@ type StringSet struct {
 	lock  sync.RWMutex
 }
 
+func NewStringSet() *StringSet {
+
+	return &StringSet{items: make(map[string]bool)}
+}
+
 // Add adds a new element to the Set. Returns a pointer to the Set.
 func (s *StringSet) Add(t string) *StringSet {
 	s.lock.Lock()
@@ -70,6 +75,11 @@ func (s *StringSet) Size() int {
 type IntSet struct {
 	items map[int]bool
 	lock  sync.RWMutex
+}
+
+func NewIntSet() *IntSet {
+
+	return &IntSet{items: make(map[int]bool)}
 }
 
 // Add adds a new element to the Set. Returns a pointer to the Set.
