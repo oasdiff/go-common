@@ -5,7 +5,6 @@ import (
 
 	"cloud.google.com/go/bigquery"
 	"cloud.google.com/go/civil"
-	"github.com/oasdiff/telemetry/model"
 )
 
 type KeyValue struct {
@@ -25,23 +24,24 @@ type Telemetry struct {
 	Flags              []KeyValue     `bigquery:"flags"`
 }
 
-func NewTelemetry(t *model.Telemetry) *Telemetry {
+func NewTelemetry(app string, appVersion string, t time.Time, machineId string,
+	runtime string, platform string, command string, args []string, flags map[string]string) *Telemetry {
 
 	// *** temporary fix https://github.com/googleapis/google-cloud-go/issues/6409
-	now := civil.DateTimeOf(time.Now())
-	now.Time.Nanosecond = 0
+	ct := civil.DateTimeOf(t)
+	ct.Time.Nanosecond = 0
 	// ***
 
 	return &Telemetry{
-		Application:        t.Application,
-		ApplicationVersion: t.ApplicationVersion,
-		Time:               now,
-		MachineId:          t.MachineId,
-		Runtime:            t.Runtime,
-		Platform:           t.Platform,
-		Command:            t.Command,
-		Args:               getArgs(t.Args),
-		Flags:              toKeyValue(t.Flags),
+		Application:        app,
+		ApplicationVersion: appVersion,
+		Time:               ct,
+		MachineId:          machineId,
+		Runtime:            runtime,
+		Platform:           platform,
+		Command:            command,
+		Args:               getArgs(args),
+		Flags:              toKeyValue(flags),
 	}
 }
 
