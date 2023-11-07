@@ -17,4 +17,8 @@ type Webhook struct {
 	Spec     string `datastore:"spec"`
 	Copy     string `datastore:"copy"`
 	Created  int64  `datastore:"created"`
+	Updated  int64  `datastore:"updated"`
+	Owner    string `datastore:"owner"`
+	Repo     string `datastore:"repo"`
+	Path     string `datastore:"path"`
 }
