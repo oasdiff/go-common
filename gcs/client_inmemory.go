@@ -9,9 +9,9 @@ func NewInMemoryStore(pathToFile map[string][]byte) Client {
 
 func (m *InMemoryStore) UploadSpec(string, string, []byte) error { return nil }
 
-func (m *InMemoryStore) Read(tenant string) ([]byte, error) {
+func (m *InMemoryStore) Read(path string) ([]byte, error) {
 
-	return m.pathToFile[tenant], nil
+	return m.pathToFile[path], nil
 }
 
 func (m *InMemoryStore) Close() error { return nil }
