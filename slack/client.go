@@ -33,8 +33,9 @@ func send(channelHook string, message string) error {
 
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(struct {
+		Type string `json:"type"`
 		Text string `json:"text"`
-	}{Text: message})
+	}{Type: "mrkdwn", Text: message})
 	if err != nil {
 		logrus.Errorf("failed to encode message '%s' with '%v'", message, err)
 		return err
