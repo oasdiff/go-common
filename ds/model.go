@@ -21,4 +21,5 @@ type Webhook struct {
 	Owner    string `datastore:"owner"`
 	Repo     string `datastore:"repo"`
 	Path     string `datastore:"path"`
+	Branch   string `datastore:"branch"` // revision branch to compare the base spec
 }
