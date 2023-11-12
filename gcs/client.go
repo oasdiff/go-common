@@ -9,12 +9,15 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
+	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/oasdiff/go-common/env"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
+	"gopkg.in/yaml.v3"
 )
 
 type Client interface {
+	UploadSpec(tenant string, webhook string, name string, spec *openapi3.T) error
 	Upload(path string, file []byte) error
 	Read(path string) ([]byte, error)
 	Close() error
@@ -54,6 +57,22 @@ func NewStore() Client {
 	}
 
 	return &Store{client: client, bucket: env.GetGCPStorageBucket()}
+}
+
+func (store *Store) UploadSpec(tenant string, webhook string, name string, spec *openapi3.T) error {
+
+	payload, err := yaml.Marshal(spec)
+	if err != nil {
+		slog.Error("failed to marshal OpenAPI spec", "error", err, "tenant", tenant, "webhook", webhook)
+		return err
+	}
+
+	err = store.Upload(GetSpecPath(tenant, webhook, name), payload)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (store *Store) Upload(path string, file []byte) error {
