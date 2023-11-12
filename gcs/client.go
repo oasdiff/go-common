@@ -15,7 +15,7 @@ import (
 )
 
 type Client interface {
-	UploadSpec(tenantId string, name string, file []byte) error
+	Upload(path string, file []byte) error
 	Read(path string) ([]byte, error)
 	Close() error
 }
@@ -53,29 +53,25 @@ func NewStore() Client {
 	return &Store{client: client, bucket: env.GetGCPStorageBucket()}
 }
 
-// Buckets/syncc/{tenant-id}/spec/[]spec
-func (store *Store) UploadSpec(tenantId string, name string, file []byte) error {
+func (store *Store) Upload(path string, file []byte) error {
 
-	w := store.client.Bucket(store.bucket).
-		Object(fmt.Sprintf("%s/spec/%s", tenantId, name)).
-		NewWriter(context.Background())
+	w := store.client.Bucket(store.bucket).Object(path).NewWriter(context.Background())
 	defer func() {
 		if err := w.Close(); err != nil {
 			logrus.Errorf("failed to close gcs bucket '%s' writer file '%s' with '%v'",
-				store.bucket, name, err)
+				store.bucket, path, err)
 		}
 	}()
 
 	if _, err := w.Write(file); err != nil {
 		logrus.Errorf("failed to create file in GCS bucket '%s' file '%s' with '%v'",
-			store.bucket, name, err)
+			store.bucket, path, err)
 		return err
 	}
 
 	return nil
 }
 
-// path should look like this: {tenant-id}/spec/1685962955
 func (store *Store) Read(path string) ([]byte, error) {
 
 	rc, err := store.client.Bucket(store.bucket).
@@ -106,4 +102,10 @@ func (store *Store) Read(path string) ([]byte, error) {
 func (store *Store) Close() error {
 
 	return store.client.Close()
+}
+
+// Buckets/syncc/[]{tenant-id}/spec/[]{webhook-id}/[]spec
+func GetSpecPath(tenant, webhook, name string) string {
+
+	return fmt.Sprintf("%s/spec/%s/%s", tenant, webhook, name)
 }

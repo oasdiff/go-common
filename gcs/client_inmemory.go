@@ -7,7 +7,7 @@ func NewInMemoryStore(pathToFile map[string][]byte) Client {
 	return &InMemoryStore{pathToFile: pathToFile}
 }
 
-func (m *InMemoryStore) UploadSpec(string, string, []byte) error { return nil }
+func (m *InMemoryStore) Upload(string, []byte) error { return nil }
 
 func (m *InMemoryStore) Read(path string) ([]byte, error) {
 
