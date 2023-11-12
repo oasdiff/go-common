@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"time"
 
 	"cloud.google.com/go/storage"
 	"github.com/oasdiff/go-common/env"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
 )
@@ -30,14 +30,16 @@ func NewStore() Client {
 	if key := env.GetGCPStorageKey(); key != "" {
 		conf, err := google.JWTConfigFromJSON([]byte(key), storage.ScopeFullControl)
 		if err != nil {
-			logrus.Fatalf("failed to config storage JWT from JSON key with '%v'", err)
+			slog.Error("failed to config storage JWT from JSON key", "error", err)
+			return nil
 		}
 		ctx := context.Background()
 		opt := []option.ClientOption{option.WithTokenSource(conf.TokenSource(ctx))}
 
 		client, err := storage.NewClient(ctx, opt...)
 		if err != nil {
-			logrus.Fatalf("failed to create datastore client with '%v'", err)
+			slog.Error("failed to create datastore client", "error", err)
+			return nil
 		}
 
 		return &Store{client: client, bucket: env.GetGCPStorageBucket()}
@@ -47,7 +49,8 @@ func NewStore() Client {
 	defer cancel()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
-		logrus.Fatalf("failed to create storage client with '%v'", err)
+		slog.Error("failed to create storage client", "error", err)
+		return nil
 	}
 
 	return &Store{client: client, bucket: env.GetGCPStorageBucket()}
@@ -58,14 +61,14 @@ func (store *Store) Upload(path string, file []byte) error {
 	w := store.client.Bucket(store.bucket).Object(path).NewWriter(context.Background())
 	defer func() {
 		if err := w.Close(); err != nil {
-			logrus.Errorf("failed to close gcs bucket '%s' writer file '%s' with '%v'",
-				store.bucket, path, err)
+			slog.Error("failed to close gcs bucket writer",
+				"error", err, "bucket", store.bucket, "file", path)
 		}
 	}()
 
 	if _, err := w.Write(file); err != nil {
-		logrus.Errorf("failed to create file in GCS bucket '%s' file '%s' with '%v'",
-			store.bucket, path, err)
+		slog.Error("failed to create file in GCS bucket",
+			"error", err, "bucket", store.bucket, "file", path)
 		return err
 	}
 
@@ -80,19 +83,19 @@ func (store *Store) Read(path string) ([]byte, error) {
 	if err != nil {
 		msg := fmt.Sprintf("failed to create reader for file '%s' with '%v'",
 			path, err)
-		logrus.Error(msg)
+		slog.Error(msg)
 		return nil, errors.New(msg)
 	}
 	defer func() {
 		if err := rc.Close(); err != nil {
-			logrus.Errorf("failed to close reader with '%v'", err)
+			slog.Error("failed to close reader", "error", err)
 		}
 	}()
 
 	data, err := io.ReadAll(rc)
 	if err != nil {
 		msg := fmt.Sprintf("failed to read file '%s' with '%v'", path, err)
-		logrus.Errorf(msg)
+		slog.Error(msg)
 		return nil, errors.New(msg)
 	}
 
