@@ -26,10 +26,10 @@ func NewClientWrapper() Client {
 
 func (c *ClientWrapper) Info(message string) error {
 
-	return send(c.info, message)
+	return Send(c.info, message)
 }
 
-func send(channelHook string, message string) error {
+func Send(channelHook string, message string) error {
 
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(struct {
