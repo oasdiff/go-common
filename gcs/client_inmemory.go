@@ -10,6 +10,7 @@ func NewInMemoryStore(pathToFile map[string][]byte) Client {
 }
 
 func (m *InMemoryStore) UploadSpec(tenant string, webhook string, name string, spec *openapi3.T) error {
+
 	return nil
 }
 
