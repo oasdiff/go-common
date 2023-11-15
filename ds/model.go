@@ -11,15 +11,16 @@ type Tenant struct {
 }
 
 type Webhook struct {
-	Id       string `datastore:"id"`
-	Name     string `datastore:"name"`
-	TenantId string `datastore:"tenant_id"`
-	Spec     string `datastore:"spec"`
-	Copy     string `datastore:"copy"`
-	Created  int64  `datastore:"created"`
-	Updated  int64  `datastore:"updated"`
-	Owner    string `datastore:"owner"`
-	Repo     string `datastore:"repo"`
-	Path     string `datastore:"path"`
-	Branch   string `datastore:"branch"` // revision branch to compare the base spec
+	Id        string `datastore:"id"`
+	Name      string `datastore:"name"`
+	TenantId  string `datastore:"tenant_id"`
+	Spec      string `datastore:"spec"`
+	Copy      string `datastore:"copy"`
+	Created   int64  `datastore:"created"`
+	Updated   int64  `datastore:"updated"`
+	Owner     string `datastore:"owner"`
+	Repo      string `datastore:"repo"`
+	Path      string `datastore:"path"`
+	Branch    string `datastore:"branch"` // revision branch to compare the base spec
+	Changelog string `datastore:"changelog"`
 }
