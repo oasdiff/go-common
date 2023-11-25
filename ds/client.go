@@ -12,9 +12,22 @@ import (
 	"google.golang.org/api/option"
 )
 
+type Operator string
+
+const (
+	LessThan    Operator = "<"
+	LessEq      Operator = "<="
+	Equal       Operator = "="
+	GreaterEq   Operator = ">="
+	GreaterThan Operator = ">"
+	In          Operator = "in"
+	NotIn       Operator = "not-in"
+	NotEqual    Operator = "!="
+)
+
 type FilterField struct {
 	Name     string
-	Operator string
+	Operator Operator
 	Value    interface{}
 }
 
@@ -96,7 +109,7 @@ func (c *ClientWrapper) GetFilter(kind Kind, filters []FilterField, dst interfac
 
 	q := datastore.NewQuery(string(kind)).Namespace(c.namespace)
 	for _, currFilter := range filters {
-		q = q.FilterField(currFilter.Name, currFilter.Operator, currFilter.Value)
+		q = q.FilterField(currFilter.Name, string(currFilter.Operator), currFilter.Value)
 	}
 	_, err := c.dsc.GetAll(context.Background(), q, dst)
 	if err != nil {
