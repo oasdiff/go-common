@@ -44,7 +44,7 @@ func GetIntWithDefault(key string, defaultValue int) int {
 	return res
 }
 
-func GetFloat32WithDefault(key string, defaultValue float64) float64 {
+func GetFloat32WithDefault(key string, defaultValue float32) float32 {
 
 	value, exists := os.LookupEnv(key)
 	if !exists {
@@ -58,7 +58,7 @@ func GetFloat32WithDefault(key string, defaultValue float64) float64 {
 		return defaultValue
 	}
 
-	return res
+	return float32(res)
 }
 
 func GetLogLevel() string { return GetWithDefault("LOG_LEVEL", "info") }
