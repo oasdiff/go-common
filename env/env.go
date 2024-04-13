@@ -44,16 +44,16 @@ func GetIntWithDefault(key string, defaultValue int) int {
 	return res
 }
 
-func GetFloat64WithDefault(key string, defaultValue float64) float64 {
+func GetFloat32WithDefault(key string, defaultValue float64) float64 {
 
 	value, exists := os.LookupEnv(key)
 	if !exists {
 		return defaultValue
 	}
 
-	res, err := strconv.ParseFloat(value, 64)
+	res, err := strconv.ParseFloat(value, 32)
 	if err != nil {
-		slog.Warn("failed to parse environment variable that should be float64. using default",
+		slog.Warn("failed to parse environment variable that should be float32. using default",
 			"error", err, "env key", key, "value", value, "default", defaultValue)
 		return defaultValue
 	}
