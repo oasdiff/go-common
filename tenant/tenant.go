@@ -2,6 +2,7 @@ package tenant
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/oasdiff/go-common/ds"
@@ -26,6 +27,12 @@ func (v *Validator) Validate(next http.Handler) http.Handler {
 		if err := v.dsc.Get(ds.KindTenant, id, &t); err != nil {
 			logrus.Infof("tenant not found for request '%s'", r.URL.String())
 			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		if t.SubscriptionStatus != "active" && t.TrialEndsAt <= time.Now().Unix() {
+			logrus.Infof("tenant '%s' has no active subscription or trial for request '%s'", id, r.URL.String())
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 

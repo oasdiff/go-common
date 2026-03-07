@@ -1,13 +1,15 @@
 package ds
 
 type Tenant struct {
-	Id           string `datastore:"id" json:"id"`
-	Name         string `datastore:"name" json:"name"`
-	Email        string `datastore:"email" json:"email"`
-	Callback     string `datastore:"callback" json:"callback"`
-	SlackChannel string `datastore:"slack_channel" json:"slack_channel"`
-	Created      int64  `datastore:"created" json:"created"`
-	Comment      int64  `datastore:"comment" json:"comment"`
+	Id                 string `datastore:"id" json:"id"`
+	Name               string `datastore:"name" json:"name"`
+	Email              string `datastore:"email" json:"email"`
+	Callback           string `datastore:"callback" json:"callback"`
+	SlackChannel       string `datastore:"slack_channel" json:"slack_channel"`
+	Created            int64  `datastore:"created" json:"created"`
+	Comment            int64  `datastore:"comment" json:"comment"`
+	SubscriptionStatus string `datastore:"subscription_status" json:"subscription_status"`
+	TrialEndsAt        int64  `datastore:"trial_ends_at" json:"trial_ends_at"`
 }
 
 type Webhook struct {

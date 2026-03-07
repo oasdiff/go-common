@@ -1,6 +1,9 @@
 package ds
 
-import "reflect"
+import (
+	"reflect"
+	"time"
+)
 
 type InMemoryClient struct {
 	payload map[Kind]interface{}
@@ -19,8 +22,10 @@ func (c *InMemoryClient) Get(kind Kind, id string, dst interface{}) error {
 
 	if kind == KindTenant {
 		reflect.ValueOf(dst).Elem().Set(reflect.ValueOf(Tenant{
-			Id:   id,
-			Name: "test-123",
+			Id:                 id,
+			Name:               "test-123",
+			SubscriptionStatus: "active",
+			TrialEndsAt:        time.Now().Unix() + 86400,
 		}))
 	}
 
